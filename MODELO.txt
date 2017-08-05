@@ -1,0 +1,6 @@
+O modelo é representado como um arquivo csv tendo a cada linha:
+1ª coluna: palavra
+2ª coluna: idf calculado
+3ª coluna: dicionário contendo:
+    chave: número do documento
+    valor: peso calculado como tfn * idf do par documento x palavra
