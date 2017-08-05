@@ -5,7 +5,7 @@ from math import sqrt
 from os.path import basename
 
 from nltk import word_tokenize, OrderedDict
-
+from PorterStemmer import PorterStemmer
 from Module import Module
 
 
@@ -28,7 +28,7 @@ def calculate_query_vector_length(word_array):
 
 
 class Searcher(Module):
-    def __init__(self, config_file):
+    def __init__(self, config_file, stem=False):
         super().__init__('Searcher Module', 'logs\Searcher.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
@@ -43,6 +43,9 @@ class Searcher(Module):
         self.model_documents = defaultdict(list)
         self.document_length = {}
         self.query_document_rank = {}
+        self.use_stem = stem
+        self.stemmer = PorterStemmer()
+        self.logger.log_stem_use(self.use_stem)
 
         self.logger.log_ending_activity()
 
@@ -75,9 +78,15 @@ class Searcher(Module):
 
                 # Eliminando as palavras irrelevantes da consulta (palavras com
                 # menos de duas letras ou contendo algo diferente de letras)
+                # Nesse momento, se o PortStemmer estiver sendo usado, ele
+                # irá alterar o resultado, mudando as palavras para seus radicais
                 for word in words:
                     if len(word) > 2 and word.isalpha():
-                        self.queries[query].append(word)
+                        if self.use_stem:
+                            processed_word = self.stemmer.stem(word, 0, len(word) - 1)
+                            self.queries[query].append(processed_word)
+                        else:
+                            self.queries[query].append(word)
         self.logger.log_ending_activity()
 
     def calculate_document_vector_length(self):

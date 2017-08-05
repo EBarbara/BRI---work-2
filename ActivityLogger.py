@@ -35,3 +35,15 @@ class ActivityLogger:
 
     def log_warn(self, message):
         self.logger.warning('{0} - {1}'.format(self.module_name, message))
+
+    def log_stem_use(self, use_stem):
+        if use_stem:
+            self.logger.info('{0} using PortStemmer algorithm'.format(self.module_name))
+        else:
+            self.logger.info('{0} isn\'t using PortStemmer algorithm'.format(self.module_name))
+
+    def log_stem_system(self, use_stem):
+        if use_stem:
+            self.logger.info('Using PortStemmer algorithm')
+        else:
+            self.logger.info('Not using PortStemmer algorithm')
