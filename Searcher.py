@@ -28,8 +28,8 @@ def calculate_query_vector_length(word_array):
 
 
 class Searcher(Module):
-    def __init__(self, config_file, stem=False):
-        super().__init__('Searcher Module', 'logs\Searcher.log')
+    def __init__(self, config_file, stem):
+        super().__init__('Searcher Module', 'logs\Searcher.log', stem)
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 
@@ -43,8 +43,6 @@ class Searcher(Module):
         self.model_documents = defaultdict(list)
         self.document_length = {}
         self.query_document_rank = {}
-        self.use_stem = stem
-        self.stemmer = PorterStemmer()
         self.logger.log_stem_use(self.use_stem)
 
         self.logger.log_ending_activity()

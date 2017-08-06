@@ -16,8 +16,8 @@ def calculate_max_frequency(document, word_frequency):
 
 
 class Indexer(Module):
-    def __init__(self, config_file):
-        super().__init__('Indexer Module', 'logs\Indexer.log')
+    def __init__(self, config_file, stem):
+        super().__init__('Indexer Module', 'logs\Indexer.log', stem)
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 
