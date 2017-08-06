@@ -5,7 +5,6 @@ from math import sqrt
 from os.path import basename
 
 from nltk import word_tokenize, OrderedDict
-from PorterStemmer import PorterStemmer
 from Module import Module
 
 

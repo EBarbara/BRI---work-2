@@ -1,4 +1,5 @@
 from ActivityLogger import ActivityLogger
+from Evaluator import Evaluator
 from Indexer import Indexer
 from InvertedListGenerator import InvertedListGenerator
 from Module import Module
@@ -36,6 +37,7 @@ class App(object):
         self.run_module(InvertedListGenerator, 'config/gli.cfg', self.stem)
         self.run_module(Indexer, 'config/index.cfg', False)
         self.run_module(Searcher, 'config/busca.cfg', self.stem)
+        self.run_module(Evaluator, 'config/evaluate.cfg', self.stem)
 
         self.logger.log_ending_activity()
 
