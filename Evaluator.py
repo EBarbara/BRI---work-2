@@ -1,8 +1,12 @@
 import ast
 import csv
+
+import math
 from matplotlib import pyplot
 from collections import defaultdict
 from os.path import basename
+
+from nltk import OrderedDict
 
 from Module import Module
 
@@ -115,7 +119,7 @@ def calculate_map(expected_results, found_results):
             sum_precisions += precision
         sum_average_precision += float(sum_precisions) / len(precisions)
 
-    map = sum_average_precision/len(found_results)
+    map = sum_average_precision / len(found_results)
 
     return map
 
@@ -143,6 +147,95 @@ def calculate_precision_at_k(expected_results, found_results, k):
 
     # Getting the average of precision at k by query
     return sum_precision_k / len(found_results)
+
+
+def calculate_r_precision(expected_results, found_results):
+    sum_precision_r = 0
+
+    # Calculate the measure by query
+    for query in found_results:
+        query_found = found_results[query]
+        query_expected = expected_results[query]
+        r = len(query_expected)
+
+        query_expected_documents = []
+        for expected_data in query_expected:
+            document_number = expected_data[0]
+            query_expected_documents.append(document_number)
+
+        relevant_documents = 0
+        for found_data in query_found[:r]:
+            document_number = found_data[1]
+            if document_number in query_expected_documents:
+                relevant_documents += 1
+        precision = float(relevant_documents) / r
+        sum_precision_r += precision
+
+    # Getting the average of precision at R by query
+    return sum_precision_r / len(found_results)
+
+
+def calculate_mrr(expected_results, found_results):
+    sum_inverse_rank = 0
+    num_queries = len(found_results)
+
+    for query in found_results:
+        query_found = found_results[query]
+        query_expected = expected_results[query]
+
+        query_expected_documents = []
+        for expected_data in query_expected:
+            document_number = expected_data[0]
+            query_expected_documents.append(document_number)
+
+        for found_data in query_found:
+            document_rank = found_data[0]
+            document_number = found_data[1]
+            if document_number in query_expected_documents:
+                sum_inverse_rank += 1 / document_rank
+                break
+
+    mrr = (1 / num_queries) * sum_inverse_rank
+    return mrr
+
+
+def calculate_ndcg(expected_results, found_results):
+    sum_ndcg = 0
+
+    # Calculate the measure by query
+    for query in found_results:
+        query_found = found_results[query]
+        query_expected = expected_results[query]
+
+        relevant_documents = {}
+        for expected_data in query_expected:
+            document_number = expected_data[0]
+            document_score = expected_data[1]
+            relevant_documents[document_number] = document_score
+
+        # Calculating DCG
+        dcg = 0
+        for found_data in query_found:
+            document_rank = found_data[0]
+            document_number = found_data[1]
+            if document_number in relevant_documents:
+                # Doesn't make difference if not - a document score = 0 would turn all the sum element = 0
+                document_score = relevant_documents[document_number]
+                dcg += ((2 ** document_score) - 1) / (math.log(document_rank + 1, 2))
+
+        # Calculating IDCG
+        expected_by_relevance = OrderedDict(sorted(relevant_documents.items(), key=lambda t: t[1], reverse=True))
+
+        idcg = 0
+        for index, document in enumerate(expected_by_relevance, start=1):
+            score = expected_by_relevance[document]
+            idcg += ((2 ** score) - 1) / (math.log(index + 1, 2))
+
+        if idcg:  # just to avoid divide by zero
+            sum_ndcg += dcg / idcg
+
+    # Getting the average of n-dcg by query
+    return sum_ndcg / len(found_results)
 
 
 class Evaluator(Module):
@@ -215,6 +308,18 @@ class Evaluator(Module):
 
         self.logger.log_start_activity('Evaluation by Precision at 10')
         self.evaluations['P@10'] = calculate_precision_at_k(self.expected_results, self.found_results, 10)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by R-Precision')
+        self.evaluations['R-precision'] = calculate_r_precision(self.expected_results, self.found_results)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by Mean Reciprocal Rank')
+        self.evaluations['MRR'] = calculate_mrr(self.expected_results, self.found_results)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by Normalized Discount Cumulative Gain')
+        self.evaluations['N-DCG'] = calculate_ndcg(self.expected_results, self.found_results)
         self.logger.log_ending_activity()
 
         self.logger.log_ending_activity()
