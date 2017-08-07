@@ -120,6 +120,31 @@ def calculate_map(expected_results, found_results):
     return map
 
 
+def calculate_precision_at_k(expected_results, found_results, k):
+    sum_precision_k = 0
+
+    # Calculate the measure by query
+    for query in found_results:
+        query_found = found_results[query]
+        query_expected = expected_results[query]
+
+        query_expected_documents = []
+        for expected_data in query_expected:
+            document_number = expected_data[0]
+            query_expected_documents.append(document_number)
+
+        relevant_documents = 0
+        for found_data in query_found[:k]:
+            document_number = found_data[1]
+            if document_number in query_expected_documents:
+                relevant_documents += 1
+        precision = float(relevant_documents) / k
+        sum_precision_k += precision
+
+    # Getting the average of precision at k by query
+    return sum_precision_k / len(found_results)
+
+
 class Evaluator(Module):
     def __init__(self, config_file, stem):
         super().__init__('Evaluator Module', 'logs\Evaluator.log', stem)
@@ -182,6 +207,14 @@ class Evaluator(Module):
 
         self.logger.log_start_activity('Evaluation by Mean Average Precision')
         self.evaluations['MAP'] = calculate_map(self.expected_results, self.found_results)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by Precision at 5')
+        self.evaluations['P@5'] = calculate_precision_at_k(self.expected_results, self.found_results, 5)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by Precision at 10')
+        self.evaluations['P@10'] = calculate_precision_at_k(self.expected_results, self.found_results, 10)
         self.logger.log_ending_activity()
 
         self.logger.log_ending_activity()
