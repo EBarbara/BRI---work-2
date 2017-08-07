@@ -238,6 +238,34 @@ def calculate_ndcg(expected_results, found_results):
     return sum_ndcg / len(found_results)
 
 
+def calculate_bpref(expected_results, found_results):
+    sum_bpref = 0
+
+    # Calculate the measure by query
+    for query in found_results:
+        query_found = found_results[query]
+        query_expected = expected_results[query]
+
+        relevant_documents = []
+        for expected_data in query_expected:
+            document_number = expected_data[0]
+            relevant_documents.append(document_number)
+
+        # For each document found, calculate the sommatory
+        sum_data = 0
+        irrelevant_documents_found = 0
+        for found_data in query_found:
+            document_number = found_data[1]
+            if document_number in relevant_documents:
+                sum_data += (1 - (min(irrelevant_documents_found, len(relevant_documents)) / len(relevant_documents)))
+            else:
+                irrelevant_documents_found += 1
+        sum_bpref += (1 / len(relevant_documents)) * sum_data
+
+    # Getting the average of bpref by query
+    return sum_bpref / len(found_results)
+
+
 class Evaluator(Module):
     def __init__(self, config_file, stem):
         super().__init__('Evaluator Module', 'logs\Evaluator.log', stem)
@@ -320,6 +348,10 @@ class Evaluator(Module):
 
         self.logger.log_start_activity('Evaluation by Normalized Discount Cumulative Gain')
         self.evaluations['N-DCG'] = calculate_ndcg(self.expected_results, self.found_results)
+        self.logger.log_ending_activity()
+
+        self.logger.log_start_activity('Evaluation by BPREF')
+        self.evaluations['BPREF'] = calculate_bpref(self.expected_results, self.found_results)
         self.logger.log_ending_activity()
 
         self.logger.log_ending_activity()

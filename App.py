@@ -33,10 +33,10 @@ class App(object):
         self.logger.log_start_activity('BRI Exercise 2')
         self.logger.log_stem_system(self.stem)
 
-        # self.run_module(QueryProcessor, 'config/pc.cfg', False)
-        # self.run_module(InvertedListGenerator, 'config/gli.cfg', self.stem)
-        # self.run_module(Indexer, 'config/index.cfg', False)
-        # self.run_module(Searcher, 'config/busca.cfg', self.stem)
+        self.run_module(QueryProcessor, 'config/pc.cfg', False)
+        self.run_module(InvertedListGenerator, 'config/gli.cfg', self.stem)
+        self.run_module(Indexer, 'config/index.cfg', False)
+        self.run_module(Searcher, 'config/busca.cfg', self.stem)
         self.run_module(Evaluator, 'config/evaluate.cfg', self.stem)
 
         self.logger.log_ending_activity()

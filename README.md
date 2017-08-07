@@ -10,6 +10,8 @@ Instruções:
 
     Instalar as bibliotecas LXML, NLTK e MatPlotLib
     Executar o arquivo App.py
+        Para ligar ou desligar o PorterStemmer é necessário alterar o valor de config/stem.cfg
+        Especificamente, um valor True em USESTEM roda o sistama com o Stemmer, e False roda sem.        
     Ver os resultados
 
 Organização das pastas
@@ -20,13 +22,33 @@ Organização das pastas
     evaluation: Arquivos derivados das avaliações
         Gráficos em formato pdf
         Tabelas e listas de medidas independentes em formato csv
-        Arquivos com nome '[medida]_nostemmer_[tipo]' indicam que foram gerados em uma busca sem PorterStemmer
-        Da mesma forma, arquivos com nome '[medida]_stemmer_[tipo]' indicam que foram gerados em uma busca utilizando PorterStemmer
     logs: Arquivos .log com os logs de execução dos módulos
     xml: Arquivos .xml (e .dtd) com os dados de entrada do exercício
+    
+Nomenclatura das avaliações
+    
+    (medida)_(stem)_(tipo_documento), onde medida é pxr para os dados de Precisão x Recall,
+    e eval para o resto. Stem define se o stemmer foi usado (nostemmer = false, 
+    stemmer = true). E tipo_documento define se é um gráfico (graph) ou uma tabela (table)
+    
+  
 
 Bibliotecas externas usadas:
 
     LXML (http://lxml.de/index.html), especificamente a api etree para parsing de arquivos xml verificados por dtd
     NLTK (http://www.nltk.org/), especificamente a função word_tokenize para transformar um texto numa lista de palavras
     MatPlotLib (https://matplotlib.org/), especificamente a plotagem de gráficos
+    
+Comentários sobre o BPREF:
+    
+    Segundo o artigo original (dl.acm.org/citation.cfm?id=1009000), a formula usada é 
+    1/R *  somatório(1 - (numero de resultados irrelevantes até o momento/ R), sendo apenas 
+    somados os resultados relevantes, e sendo R  o total de documentos relevantes à query no
+    corpus. No entanto, segundo (http://icb.med.cornell.edu/wiki/index.php/BPrefTrecEval2006)
+    e confirmado no estudo para esse trabalho, é necessário transformar o numerador em
+    min(numero de resultados irrelevantes até o momento, R) de modo a garantir que quando os
+    resultados irrelevantes ultrapassam R, o sistema para de considerá-los, e não retorna 
+    probabilidades de -10 ou coisas assim. O denominador também deveria ser mudado para min(N, R), 
+    sendo N o numero de documentos não relevantes, mas dado a quantidade de artigos no corpus
+    e a pouca quantidade de documentos relevantes é seguro afirmar que R << N
+    
