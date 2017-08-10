@@ -50,7 +50,6 @@ class Searcher(Module):
         self.document_length = {}
         self.query_document_rank = {}
 
-        self.logger.log_stem_use(self.use_stem)
         self.logger.log_ending_activity()
 
     def read_model(self):

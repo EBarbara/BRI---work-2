@@ -26,7 +26,6 @@ class InvertedListGenerator(Module):
         self.documents = dict()
         self.list = defaultdict(list)
 
-        self.logger.log_stem_use(self.use_stem)
         self.logger.log_ending_activity()
 
     def read_documents(self):

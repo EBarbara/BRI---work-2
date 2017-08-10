@@ -30,7 +30,7 @@ class App(object):
         self.run_module(Indexer, 'config/index.cfg', True)
         self.run_module(Searcher, 'config/busca.cfg', True)
 
-        # self.run_module(Evaluator, 'config/evaluate.cfg', False)
+        self.run_module(Evaluator, 'config/evaluate.cfg', False)
 
         self.logger.log_ending_activity()
 

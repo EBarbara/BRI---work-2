@@ -10,8 +10,6 @@ Instruções:
 
     Instalar as bibliotecas LXML, NLTK e MatPlotLib
     Executar o arquivo App.py
-        Para ligar ou desligar o PorterStemmer é necessário alterar o valor de config/stem.cfg
-        Especificamente, um valor True em USESTEM roda o sistama com o Stemmer, e False roda sem.        
     Ver os resultados
 
 Organização das pastas
@@ -21,15 +19,15 @@ Organização das pastas
     csv: Arquivos .csv como resultados dos processamentos de busca
     evaluation: Arquivos derivados das avaliações
         Gráficos em formato pdf
-        Tabelas e listas de medidas independentes em formato csv
+        Tabelas em formato csv
     logs: Arquivos .log com os logs de execução dos módulos
     xml: Arquivos .xml (e .dtd) com os dados de entrada do exercício
     
 Nomenclatura das avaliações
     
-    (medida)_(stem)_(tipo_documento), onde medida é pxr para os dados de Precisão x Recall,
-    e eval para o resto. Stem define se o stemmer foi usado (nostemmer = false, 
-    stemmer = true). E tipo_documento define se é um gráfico (graph) ou uma tabela (table)
+    (medida)_(tipo_documento), onde medida é pxr para os dados de Precisão x Recall, r para
+    Precision-R(A,B) e eval para o resto. Tipo_documento define se é um gráfico (graph) 
+    ou uma tabela (table)
     
 Bibliotecas externas usadas:
 
