@@ -16,7 +16,7 @@ def calculate_votes(score):
 
 class QueryProcessor(Module):
     def __init__(self, config_file, stem):
-        super().__init__('Query Processor Module', 'logs\QueryProcessor.log', stem)
+        super().__init__('Query Processor Module', 'logs\QueryProcessor.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 

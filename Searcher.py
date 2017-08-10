@@ -6,6 +6,7 @@ from os.path import basename
 
 from nltk import word_tokenize, OrderedDict
 from Module import Module
+from PorterStemmer import PorterStemmer
 
 
 def calculate_max(words):
@@ -28,22 +29,28 @@ def calculate_query_vector_length(word_array):
 
 class Searcher(Module):
     def __init__(self, config_file, stem):
-        super().__init__('Searcher Module', 'logs\Searcher.log', stem)
+        super().__init__('Searcher Module', 'logs\Searcher.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 
+        self.use_stem = stem
+        self.stemmer = PorterStemmer()
         config = self.read_configuration_file(config_file)
         self.queries_file = config.get('CONSULTAS')[0]
-        self.model_file = config.get('MODELO')[0]
-        self.results_file = config.get('RESULTADOS')[0]
+        if stem:
+            self.model_file = config.get('MODELO_STEM')[0]
+            self.results_file = config.get('RESULTADOS_STEM')[0]
+        else:
+            self.model_file = config.get('MODELO')[0]
+            self.results_file = config.get('RESULTADOS')[0]
 
         self.queries = defaultdict(list)
         self.model = {}
         self.model_documents = defaultdict(list)
         self.document_length = {}
         self.query_document_rank = {}
-        self.logger.log_stem_use(self.use_stem)
 
+        self.logger.log_stem_use(self.use_stem)
         self.logger.log_ending_activity()
 
     def read_model(self):

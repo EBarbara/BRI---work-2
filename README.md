@@ -31,13 +31,17 @@ Nomenclatura das avaliações
     e eval para o resto. Stem define se o stemmer foi usado (nostemmer = false, 
     stemmer = true). E tipo_documento define se é um gráfico (graph) ou uma tabela (table)
     
-  
-
 Bibliotecas externas usadas:
 
     LXML (http://lxml.de/index.html), especificamente a api etree para parsing de arquivos xml verificados por dtd
     NLTK (http://www.nltk.org/), especificamente a função word_tokenize para transformar um texto numa lista de palavras
     MatPlotLib (https://matplotlib.org/), especificamente a plotagem de gráficos
+    
+Comentários sobre os arquivos de configuração:
+
+    De modo a permitir gerar uma versão de resultados esperados e obtidos usando PorterStemmer
+    e outra sem usá-lo, os arquivos busca.cfg, gli.cfg e index.cfg foram alterados, adicionando 
+    as configurações RESULTADOS_STEM, ESCREVA_STEM e LEIA_STEM.
     
 Comentários sobre o BPREF:
     

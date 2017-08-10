@@ -17,13 +17,17 @@ def calculate_max_frequency(document, word_frequency):
 
 class Indexer(Module):
     def __init__(self, config_file, stem):
-        super().__init__('Indexer Module', 'logs\Indexer.log', stem)
+        super().__init__('Indexer Module', 'logs\Indexer.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 
         config = self.read_configuration_file(config_file)
-        self.input_file = config.get('LEIA')[0]
-        self.output_file = config.get('ESCREVA')[0]
+        if stem:
+            self.input_file = config.get('LEIA_STEM')[0]
+            self.output_file = config.get('ESCREVA_STEM')[0]
+        else:
+            self.input_file = config.get('LEIA')[0]
+            self.output_file = config.get('ESCREVA')[0]
         self.inverted_list = defaultdict(list)
         self.document_list = []
         self.document_max = {}

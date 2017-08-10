@@ -1,16 +1,13 @@
 from collections import defaultdict
 
 from ActivityLogger import ActivityLogger
-from PorterStemmer import PorterStemmer
 
 
 class Module(object):
-    def __init__(self, module_name, log_file, stem=False):
+    def __init__(self, module_name, log_file):
         super(Module, self).__init__()
         self.module_name = module_name
         self.logger = ActivityLogger(module_name, log_file)
-        self.stemmer = PorterStemmer()
-        self.use_stem = stem
 
     '''
     Eu tentei usar o módulo configparser, mas não encontrei nenhuma forma de fazê-lo 

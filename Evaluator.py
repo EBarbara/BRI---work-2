@@ -268,7 +268,7 @@ def calculate_bpref(expected_results, found_results):
 
 class Evaluator(Module):
     def __init__(self, config_file, stem):
-        super().__init__('Evaluator Module', 'logs\Evaluator.log', stem)
+        super().__init__('Evaluator Module', 'logs\Evaluator.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 

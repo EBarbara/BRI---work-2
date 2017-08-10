@@ -6,21 +6,27 @@ from lxml import etree
 from nltk import word_tokenize
 
 from Module import Module
+from PorterStemmer import PorterStemmer
 
 
 class InvertedListGenerator(Module):
     def __init__(self, config_file, stem):
-        super().__init__('Inverted List Generator Module', 'logs\InvertedListGenerator.log', stem)
+        super().__init__('Inverted List Generator Module', 'logs\InvertedListGenerator.log')
         filename = basename(config_file)
         self.logger.log_start_activity('Reading Configuration File %s' % filename)
 
+        self.use_stem = stem
+        self.stemmer = PorterStemmer()
         config = self.read_configuration_file(config_file)
         self.input = config.get('LEIA')
-        self.output = config.get('ESCREVA')
+        if self.use_stem:
+            self.output = config.get('ESCREVA_STEM')
+        else:
+            self.output = config.get('ESCREVA')
         self.documents = dict()
         self.list = defaultdict(list)
-        self.logger.log_stem_use(self.use_stem)
 
+        self.logger.log_stem_use(self.use_stem)
         self.logger.log_ending_activity()
 
     def read_documents(self):
